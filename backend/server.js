@@ -80,7 +80,8 @@ mongoose
     })
     .catch((err) => {
         console.error('✗ MongoDB connection error:', err);
-        process.exit(1);
+        // Do not exit process, just log error so we can debug in Render logs
+        console.log('Continuing without database connection...');
     });
 
 // Handle MongoDB connection events
