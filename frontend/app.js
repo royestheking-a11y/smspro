@@ -135,15 +135,17 @@ function addLog(type, message) {
 // Fetch statistics
 async function fetchStats() {
     try {
-        const response = await fetch('/api/stats');
+        const baseUrl = window.API_BASE || '';
+        const response = await fetch(`${baseUrl}/api/stats`);
         const data = await response.json();
 
         if (data.status === 'success') {
             const { orders } = data.data;
-            elements.totalOrders.textContent = orders.totalOrders;
-            elements.pendingOrders.textContent = orders.pendingOrders;
-            elements.paidOrders.textContent = orders.paidOrders;
-            elements.matchRate.textContent = orders.matchRate + '%';
+            // Update stats with animation
+            updateStatWithAnimation(elements.totalOrders, orders.totalOrders);
+            updateStatWithAnimation(elements.pendingOrders, orders.pendingOrders);
+            updateStatWithAnimation(elements.paidOrders, orders.paidOrders);
+            updateStatWithAnimation(elements.matchRate, orders.matchRate + '%');
         }
     } catch (error) {
         console.error('Error fetching stats:', error);
@@ -153,7 +155,8 @@ async function fetchStats() {
 // Fetch recent transactions
 async function fetchTransactions() {
     try {
-        const response = await fetch('/api/transactions?limit=10');
+        const baseUrl = window.API_BASE || '';
+        const response = await fetch(`${baseUrl}/api/transactions?limit=10`);
         const data = await response.json();
 
         if (data.status === 'success') {
