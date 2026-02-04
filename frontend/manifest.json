@@ -1,7 +1,7 @@
 {
-    "name": "SMS PRO",
+    "name": "SMS PRO | Automated Payment Gateway Bridge",
     "short_name": "SMS PRO",
-    "description": "Automated Payment Processing System for Rizqara Tech",
+    "description": "A high-performance SMS-to-Webhook synchronization tool designed for real-time transaction tracking. Developed by Rizqara Tech, SMS PRO bridges the gap between mobile financial services like bKash/Nagad and your web backend, enabling instant order confirmation through secure TrxID extraction and automated matching logic.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#FFF0F5",
