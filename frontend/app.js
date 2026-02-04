@@ -51,7 +51,22 @@ function initializeApp() {
 
 // Socket.IO Connection
 function initializeSocket() {
-    socket = io();
+    // Determine backend URL
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const API_BASE = isLocal ? '' : 'https://smspro-backend.onrender.com';
+    window.API_BASE = API_BASE;
+
+    console.log('Connecting to Backend:', API_BASE);
+    if (!isLocal) {
+        // Show backend URL in logs for debugging
+        setTimeout(() => addLog('info', `Backend: ${API_BASE}`), 1000);
+    }
+
+    // Connect with explicit URL and transports
+    socket = io(API_BASE, {
+        transports: ['websocket', 'polling'],
+        reconnectionAttempts: 5
+    });
 
     socket.on('connect', () => {
         isConnected = true;
@@ -68,6 +83,12 @@ function initializeSocket() {
         isConnected = false;
         updateConnectionStatus(false);
         addLog('error', 'Disconnected from server');
+    });
+
+    socket.on('connect_error', (error) => {
+        console.error('Socket connection error:', error);
+        addLog('error', `Connection Error: ${error.message}`);
+        updateConnectionStatus(false);
     });
 
     // Listen for transaction events
