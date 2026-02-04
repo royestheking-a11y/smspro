@@ -15,17 +15,30 @@ const apiRouter = require('./routes/api');
 const app = express();
 const server = http.createServer(app);
 
-// Initialize Socket.IO
+// Initialize Socket.IO with permissive CORS
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || '*',
-        methods: ['GET', 'POST']
-    }
+        origin: "*", // Allow all origins for Socket.IO
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true
+    },
+    transports: ['websocket', 'polling'] // Force support for both
 });
 
 // Middleware
-app.use(helmet());
-app.use(cors());
+app.use(helmet({
+    contentSecurityPolicy: false, // Disable CSP for easier cross-origin debugging
+    crossOriginEmbedderPolicy: false
+}));
+
+// Permissive CORS for API
+app.use(cors({
+    origin: '*', // Allow all origins for API
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    credentials: true // Allow cookies/headers
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
